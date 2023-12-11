@@ -1,6 +1,5 @@
 import random
 import math
-from numba import jit
 from individuos.individuo import Individuo
 
 """
@@ -14,7 +13,6 @@ from individuos.individuo import Individuo
 """
 o ponto será da forma (y, x)
 """
-@jit(nopython=True)
 def calcula_distancia(p1, p2):
     return math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
 
@@ -28,7 +26,7 @@ class Mapa:
     def __init__(self, x, y, obstaculo_chance = 0.25, terra_chance=0.5, grama_chance=0.25) -> None:
         self.mapa: list[list] = []
 
-        self.positions_withgrass:list = []
+        self.positions_withgrass:set = set()
 
         self.x: int  = x
         self.y: int = y
@@ -45,11 +43,11 @@ class Mapa:
                 self.mapa[i].append(valor_a_ser_adicionado)
 
                 if valor_a_ser_adicionado == 2: #se for uma grama, adicionar a posição na lista de posições que tem grama
-                    self.positions_withgrass.append([y, x])
+                    self.positions_withgrass.add((y, x))
 
             self.mapa[i].append(-1)
 
-        self.positions_withgrass = set(self.positions_withgrass) #busca em set é O(1)
+      #  self.positions_withgrass = set(self.positions_withgrass) #busca em set é O(1)
 
     def atualizar(self, individuos: list[Individuo]):
          #atualizar o mapa
