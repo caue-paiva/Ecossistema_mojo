@@ -1,6 +1,6 @@
 import random
 import math
-
+from numba import jit
 from individuos.individuo import Individuo
 
 """
@@ -14,7 +14,7 @@ from individuos.individuo import Individuo
 """
 o ponto será da forma (y, x)
 """
-
+@jit(nopython=True)
 def calcula_distancia(p1, p2):
     return math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
 
@@ -24,7 +24,6 @@ def calcula_input(valor: int, distancia: float):
         
         if (valor == 3): #aliado
             return -1 / distancia
-
 class Mapa:
     def __init__(self, x, y, obstaculo_chance = 0.25, terra_chance=0.5, grama_chance=0.25) -> None:
         self.mapa: list[list] = []
@@ -66,17 +65,17 @@ class Mapa:
                     print(self.mapa[y][x], end=" ")
 
             print()
-
-    def surroundings(self, posicao, alcance):
+   
+    def surroundings(self, posicao:tuple, alcance:int)->list:
         """
         TODO
         dada uma posição do mapa (y, x)
         retornar uma matriz de todos os blocos do mapa a "alcance" de distancia
         tem que conter o ponto (y, x)
         """
-        surroundings = []
+        surroundings:list = []
 
-        contador = -1
+        contador:int = -1
 
         #para todos os y's
         #numbah

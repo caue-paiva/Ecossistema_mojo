@@ -1,21 +1,24 @@
-import pandas as pd 
-
-Se= pd.read_json("teste.json", typ= pd.Series, dtype=int)
-
-#Se["index3"] = Se["index3"] +1
-#Se = pd.read_csv("series.csv")
-
-#Se = pd.Series(Se)
-
-print(8 in Se)
-
-"""if "index3" in Se:
-    Se["index3"] = (Se["index3"] +8)/2
-else:
-    Se["index3"] = 8
-Se["index1"] = (Se["index1"] + 10)/2"""
+#from mapa.mapa import calcula_distancia
+import time
+from numba import jit
+tempo_antes:float = time.time()
 
 
-print(Se)
+#calcula_distancia((17,37),(1,45))
 
-Se.to_json("teste.json")
+#@jit (nopython=True)
+def printa():
+    for i in range(1000000):
+        print(" ")
+#or i in range(100000):
+   # calcula_distancia((17,37),(1,45))
+
+#for i in range(100000):
+  #  calcula_distancia((17,37),(1,45))
+printa()
+printa()
+printa()
+
+
+
+print(f"tempo total: {time.time() - tempo_antes}")
