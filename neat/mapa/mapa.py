@@ -31,15 +31,9 @@ class Mapa:
 
         self.positions_withgrass:list = []
 
-<<<<<<< HEAD
-        self.x = x
-        self.y = y
-        #numbah
-=======
         self.x: int  = x
         self.y: int = y
 
->>>>>>> 7c8f554b0e7892e6ffa5189a3cb5b8bfd7349521
         for i in range(y):
             self.mapa.append([-1])
 
@@ -146,21 +140,8 @@ class Mapa:
 
         if action == 3: return self.move(postion, 0, 1) #ir pra direita
 
-<<<<<<< HEAD
-        if action == 4: return self.move_left(postion)
-
-        if action == 5: return self.eat(postion)
-
-    def update_by_death(self, position):
-        if position in self.positions_with_grass:
-            self.mapa[position[0]][position[1]] = 2
-        else:
-            self.mapa[position[0]][position[1]] = 0
-    #numbah
-=======
         if action == 4: return self.move(postion, 0, -1) #ir pra esquerda
 
->>>>>>> 7c8f554b0e7892e6ffa5189a3cb5b8bfd7349521
     def inputs(self, position):
         inputs_ = []
 

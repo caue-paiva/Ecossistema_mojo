@@ -3,13 +3,8 @@ from individuos.individuo import CriarIndividuo, Individuo
 from mapa.mapa import Mapa
 
 import math
-<<<<<<< HEAD
-from numba import jit
-import time
-=======
 import random
 
->>>>>>> 7c8f554b0e7892e6ffa5189a3cb5b8bfd7349521
 ag = AG()
 
 def melhor_individuo(individuo1: Individuo, individuo2: Individuo):
@@ -24,15 +19,8 @@ def cruzamento(individuo1: Individuo, individuo2: Individuo):
     for i in range(len(individuo1.gene)):
         for j in range(len(individuo1.gene[i])):
 
-<<<<<<< HEAD
-def GetFitness(individuos):
-   # @jit(nopython=True)
-    def criterio_de_ordenacao(individuo):
-        posicao_objetivo = individuo.posicao_objetivo
-=======
             neuronio1_info: list = individuo1.gene[i][j]
             neuronio2_info: list = individuo2.gene[i][j]
->>>>>>> 7c8f554b0e7892e6ffa5189a3cb5b8bfd7349521
 
             for k in range(0, len(neuronio1_info)):
                 gene_novo[i][j][k][1] = (neuronio1_info[k][1] + neuronio2_info[k][1]) / 2
@@ -141,29 +129,16 @@ class Simulacao():
 
         self.mapa = Mapa(50, 50, obstaculo_chance=0, terra_chance=0.75, grama_chance=0.25)
 
-<<<<<<< HEAD
-        self.individuos = StartPopulation(numero_de_individuos, gene=gene_individuo)
-        total_get_fit:float = 0.0
-=======
         self.individuos = self.StartPopulation(numero_de_individuos=numero_de_individuos, gene=gene_individuo)
 
->>>>>>> 7c8f554b0e7892e6ffa5189a3cb5b8bfd7349521
         for geracao in range(self.numero_de_geracoes):
             print(f"Na geração {geracao}")
 
             self.Simulate()
-<<<<<<< HEAD
-            tempo_comeco_getfit: float = time.time()
-            self.fitness = GetFitness(self.individuos)
-            total_get_fit += time.time() -  tempo_comeco_getfit 
-            self.individuos = NewPopulation(self.fitness)
-        print(total_get_fit)
-=======
 
             self.mapa.atualizar(self.individuos) #atualizar o mapa
 
             self.individuos = self.torneio_de_dois(self.individuos, self.individuos[0].tipo)
->>>>>>> 7c8f554b0e7892e6ffa5189a3cb5b8bfd7349521
     def Results(self):
         for individuo in self.fitness:
             print(f"{individuo.objetivo_concluido}, {individuo.numero_de_acoes}, {math.sqrt((individuo.posicao[0] - individuo.posicao_objetivo[0])**2 + (individuo.posicao[1] - individuo.posicao_objetivo[1])**2)}")
