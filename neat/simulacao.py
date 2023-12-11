@@ -2,7 +2,8 @@ from ag.ag import AG
 from individuos.individuo import CriarIndividuo
 from mapa.mapa import Mapa
 import math
-
+from numba import jit
+import time
 ag = AG()
 
 def StartPopulation(self, numero_de_individuos: int, gene: list):
@@ -16,6 +17,7 @@ def StartPopulation(self, numero_de_individuos: int, gene: list):
     return individuos
 
 def GetFitness(individuos):
+   # @jit(nopython=True)
     def criterio_de_ordenacao(individuo):
         posicao_objetivo = individuo.posicao_objetivo
 
@@ -70,16 +72,16 @@ class Simulacao():
         self.mapa = Mapa(50, 50, obstaculo_chance=0, terra_chance=0.75, grama_chance=0.25)
 
         self.individuos = StartPopulation(numero_de_individuos, gene=gene_individuo)
-
+        total_get_fit:float = 0.0
         for geracao in range(self.numero_de_geracoes):
             print(f"Na geração {geracao}")
 
             self.Simulate()
-    
+            tempo_comeco_getfit: float = time.time()
             self.fitness = GetFitness(self.individuos)
-
+            total_get_fit += time.time() -  tempo_comeco_getfit 
             self.individuos = NewPopulation(self.fitness)
-    
+        print(total_get_fit)
     def Results(self):
         for individuo in self.fitness:
             print(f"{individuo.objetivo_concluido}, {individuo.numero_de_acoes}, {math.sqrt((individuo.posicao[0] - individuo.posicao_objetivo[0])**2 + (individuo.posicao[1] - individuo.posicao_objetivo[1])**2)}")

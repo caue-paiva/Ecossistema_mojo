@@ -20,7 +20,7 @@ class Mapa:
 
         self.x = x
         self.y = y
-
+        #numbah
         for i in range(y):
             self.mapa.append([])
 
@@ -61,6 +61,7 @@ class Mapa:
         contador = -1
 
         #para todos os y's
+        #numbah
         for i in range(posicao[1] - alcance, posicao[1] + alcance + 1): #posicao[1] é y
             surroundings.append([])
 
@@ -80,6 +81,7 @@ class Mapa:
         #um predador ou uma presa
 
         #tratar o fato de que o mapa pode estar cheio
+        #numbah
         while(True):
             x = random.randint(0, self.x - 1)
             y = random.randint(0, self.y - 1)
@@ -192,7 +194,7 @@ class Mapa:
             self.mapa[position[0]][position[1]] = 2
         else:
             self.mapa[position[0]][position[1]] = 0
-
+    #numbah
     def inputs(self, position):
         inputs_ = []
 

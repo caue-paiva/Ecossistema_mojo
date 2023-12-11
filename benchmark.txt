@@ -13,3 +13,13 @@ tempo busca mapa 2: 2.1457672119140625e-06
 criar indv: média de tempo: 0.00027 
 
 cria indv e aplica mutação: média de 0.00025
+
+
+
+
+
+
+
+BENCHMARK COM NUMBA 
+
+getfit sem JIT
