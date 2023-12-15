@@ -18,7 +18,7 @@ fintess_melhor_geracao = []
 contador = 0
 numero_do_grafico = 0
 
-contador_quantidade = 1000
+contador_quantidade = 500
 
 melhor_de_todos: Individuo 
 
@@ -58,7 +58,10 @@ def cruzamento(individuo1: Individuo, individuo2: Individuo):
 
 
 class Simulacao():
+    mudanca_num_pop: int #mudanca na qntd de individuos, ocorre quando individuos muito ruims são removidos da pop
+
     def __init__(self) -> None:
+        self.mudanca_num_pop = 0 #inicializa essa variavel para 0, para ela poder ser usada na primeira vez
         pass
 
     def nova_populacao(self, populacao: list[Individuo], tipo: int)->list:
@@ -85,7 +88,10 @@ class Simulacao():
  
         posicao = self.mapa.posicao_disponivel(3) #pegar uma nova posição
         nova_populacao.append(CriarIndividuo(gene=melhor_da_populacao.gene, posicao=posicao, tipo=tipo, modelo=self.modelo)) #colocar o melhor da geração na prróximo geração
+        tam_pop_antiga: int = len(populacao)
+        print(f"tam da população antes: {tam_pop_antiga}")
         
+        fit_melhor_pop: int = melhor_da_populacao.quantidade
         #---------------------Cruzar---------------------
         #a melhor metade da população cruza com o melhor da geração
         for i in range(int(len(populacao)/2)):
@@ -100,16 +106,26 @@ class Simulacao():
         #a pior metade da população cruza com o melhor de todos
         for i in range(int(len(populacao)/2), len(populacao) - 12):
             media_dos_fitness += populacao[i].quantidade #calcula a media 
-
+            if (populacao[i].quantidade < fit_melhor_pop/4):
+                continue
             gene = cruzamento(melhor_de_todos, populacao[i]) #cruzar com o melhor de todos
 
             posicao = self.mapa.posicao_disponivel(tipo) #pegar uma nova posição
             nova_populacao.append(CriarIndividuo(gene=gene, posicao=posicao, tipo=tipo, modelo=self.modelo)) #adicionar o novo cara na população
-        
-        for i in range(len(populacao) - 10, len(populacao)):
+       
+        for i in range(self.mudanca_num_pop):  #coloca novos indv para entrar no lugar dos piores retirados da populacao
+            print("nova cara para compensar")
             posicao = self.mapa.posicao_disponivel(tipo)
-
+            nova_populacao.append(CriarIndividuo(gene=melhor_da_populacao.gene, posicao=posicao, modelo=self.modelo, tipo=tipo))
+       
+        for i in range(10):
+            posicao = self.mapa.posicao_disponivel(tipo)
             nova_populacao.append(CriarIndividuo(gene=None, posicao=posicao, modelo=self.modelo, tipo=tipo))
+
+       # for i in range(len(populacao) - (10), len(populacao)):
+           # posicao = self.mapa.posicao_disponivel(tipo)
+
+           # nova_populacao.append(CriarIndividuo(gene=None, posicao=posicao, modelo=self.modelo, tipo=tipo))
 
         #---------------------Grafico---------------------
         media_dos_fitness /= len(populacao) #calcula media
@@ -117,7 +133,9 @@ class Simulacao():
         fitness_melhor_individuo.append(melhor_de_todos.quantidade)
         quantidade_de_grama.append(len(self.mapa.positions_withgrass))
         fintess_melhor_geracao.append(melhor_da_populacao.quantidade)
-
+        self.mudanca_num_pop = abs(tam_pop_antiga - len(nova_populacao) )
+        print(f"mudanca na popula {self.mudanca_num_pop}")
+        print(f"tam da nova populacao {len(nova_populacao) }")
         return nova_populacao
 
     def Simulate(self):
