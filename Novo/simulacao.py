@@ -59,7 +59,8 @@ def cruzamento(individuo1: Individuo, individuo2: Individuo):
 
 class Simulacao():
     mudanca_num_pop: int #mudanca na qntd de individuos, ocorre quando individuos muito ruims são removidos da pop
-    MUTACAO_VARIAVEL:list[int] = [0, 1, 0, 0, 1, 0]
+    MUTACAO_VARIAVEL:list[int] = [0, 2, 0 ,0 ,1]
+    # [0, 1, 0 ,0 ,1] , relativamente estável e com certos picos
     mutacao_variavel_index:int 
     DELTA:float = 0.5
     geracoes_fit_estag: int
@@ -104,10 +105,15 @@ class Simulacao():
         fit_melhor_pop: int = melhor_da_populacao.quantidade
         #---------------------Cruzar---------------------
         #a melhor metade da população cruza com o melhor da geração
+        gene_cruzar:list
+        if melhor_da_populacao == melhor_de_todos:
+           gene_cruzar = None
+        else:
+            gene_cruzar = melhor_da_populacao
         for i in range(int(len(populacao)/2)):
             media_dos_fitness += populacao[i].quantidade #calcula a media
 
-            gene = cruzamento(melhor_da_populacao, populacao[i])
+            gene = cruzamento(gene_cruzar, populacao[i])
 
             posicao = self.mapa.posicao_disponivel(tipo) #pegar uma nova posição
             nova_populacao.append(CriarIndividuo(gene=gene, posicao=posicao, tipo=tipo, modelo=self.modelo)) #passar o cara mutado
@@ -118,7 +124,7 @@ class Simulacao():
             media_dos_fitness += populacao[i].quantidade #calcula a media 
             if (populacao[i].quantidade < fit_melhor_pop/4):
                 continue
-            gene = cruzamento(melhor_de_todos, populacao[i]) #cruzar com o melhor de todos
+            gene = cruzamento(gene_cruzar, populacao[i]) #cruzar com o melhor de todos
 
             posicao = self.mapa.posicao_disponivel(tipo) #pegar uma nova posição
             nova_populacao.append(CriarIndividuo(gene=gene, posicao=posicao, tipo=tipo, modelo=self.modelo)) #adicionar o novo cara na população
@@ -126,7 +132,7 @@ class Simulacao():
         for i in range(self.mudanca_num_pop):  #coloca novos indv para entrar no lugar dos piores retirados da populacao
             #print("novo cara para compensar")
             posicao = self.mapa.posicao_disponivel(tipo)
-            nova_populacao.append(CriarIndividuo(gene=ag.mutate(melhor_da_populacao.gene,self.__mutacao_atual__()), posicao=posicao, modelo=self.modelo, tipo=tipo))
+            nova_populacao.append(CriarIndividuo(gene=gene_cruzar.gene, posicao=posicao, modelo=self.modelo, tipo=tipo))
        
         for i in range(10): #adiciona 10 individous aleatorios
             posicao = self.mapa.posicao_disponivel(tipo)
@@ -140,7 +146,7 @@ class Simulacao():
         quantidade_de_grama.append(len(self.mapa.positions_withgrass))
         fintess_melhor_geracao.append(melhor_da_populacao.quantidade)
         self.mudanca_num_pop = abs(tam_pop_antiga - len(nova_populacao) )
-        print(f"mudanca na popula {self.mudanca_num_pop}")
+        #print(f"mudanca na popula {self.mudanca_num_pop}")
         #print(f"tam da nova populacao {len(nova_populacao) }")
         return nova_populacao
 
@@ -199,7 +205,7 @@ class Simulacao():
         geracao = 0
 
         #---------------------Inicialização---------------------
-        self.mapa = Mapa(50, 50, obstaculo_chance=0, terra_chance=0.5, grama_chance=0.5) #criar um mapa
+        self.mapa = Mapa(50, 50, obstaculo_chance=0, terra_chance=0.2, grama_chance=0.8) #criar um mapa
 
         #criar os primeiros individuos
         self.individuos = self.StartPopulation(numero_de_individuos=numero_de_individuos, modelo=modelo)
@@ -222,7 +228,7 @@ class Simulacao():
             self.Simulate()
             
             #---------------------Nova Populacao---------------------
-            self.mapa = Mapa(50, 50, obstaculo_chance=0, terra_chance=0.5, grama_chance=0.5) #criar um mapa novo (resetar as gramas)
+            self.mapa = Mapa(50, 50, obstaculo_chance=0, terra_chance=0.2, grama_chance=0.8) #criar um mapa novo (resetar as gramas)
 
             self.individuos = self.nova_populacao(self.individuos, self.individuos[0].tipo)    
             
