@@ -59,8 +59,9 @@ def cruzamento(individuo1: Individuo, individuo2: Individuo):
 
 class Simulacao():
     mudanca_num_pop: int #mudanca na qntd de individuos, ocorre quando individuos muito ruims são removidos da pop
-    MUTACAO_VARIAVEL:list[int] = [0, 2, 0 ,0 ,1]
+    MUTACAO_VARIAVEL:list[int] = [0, 2, 0, 0 ,2,0]
     # [0, 1, 0 ,0 ,1] , relativamente estável e com certos picos
+    #[0, 2, 0, 0 ,2,0] instavel e varios picos
     mutacao_variavel_index:int 
     DELTA:float = 0.5
     geracoes_fit_estag: int
