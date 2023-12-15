@@ -1,6 +1,7 @@
 import random
 
-def mutate_weihts(gene):
+
+def mutate_weihts(gene)->list:
     layer_sorteada = random.randint(0, len(gene) - 1)
 
     neuronio_a_mutar = random.randint(0, len(gene[layer_sorteada]["weights"]) - 1)
@@ -10,7 +11,7 @@ def mutate_weihts(gene):
 
     return gene
 
-def mutate_bias(gene):
+def mutate_bias(gene)->list:
     layer_sorteada = random.randint(0, len(gene) - 1)
 
     neuronio_a_mutar = random.randint(0, len(gene[layer_sorteada]["bias"]) - 1)
@@ -24,7 +25,7 @@ class AG:
     def __init__(self) -> None:
         pass   
     
-    def mutate(self, gene, qtd):
+    def mutate(self, gene, qtd)->list:
         for i in range(qtd):
             dice = random.randint(0, 1)
 

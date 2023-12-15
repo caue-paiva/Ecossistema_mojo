@@ -22,10 +22,10 @@ contador_quantidade = 500
 
 melhor_de_todos: Individuo 
 
-mutacao_variavel = [0, 1, 1, 1, 0]
-index_mutacao = 0
-DELTA = 0.5
-delta_fitness = 0
+#mutacao_variavel = [0, 1, 1, 1, 0]
+#index_mutacao = 0
+#DELTA = 0.5
+#delta_fitness = 0
 
 contador_variavel = 0
 contador_variavel_qtd = 500
@@ -59,10 +59,20 @@ def cruzamento(individuo1: Individuo, individuo2: Individuo):
 
 class Simulacao():
     mudanca_num_pop: int #mudanca na qntd de individuos, ocorre quando individuos muito ruims são removidos da pop
+    MUTACAO_VARIAVEL:list[int] = [0, 1, 0, 0, 1, 0]
+    mutacao_variavel_index:int 
+    DELTA:float = 0.5
+    geracoes_fit_estag: int
+    
 
     def __init__(self) -> None:
-        self.mudanca_num_pop = 0 #inicializa essa variavel para 0, para ela poder ser usada na primeira vez
+        self.mudanca_num_pop = 0 #inicializa essas variaveis para 0, para ela poder ser usada na primeira vez
+        self.geracoes_fit_estag = 0
+        self.mutacao_variavel_index = 0
         pass
+
+    def __mutacao_atual__(self)->int: #retorna qual o nivel de mutacao é requerido 
+        return self.MUTACAO_VARIAVEL[self.mutacao_variavel_index]
 
     def nova_populacao(self, populacao: list[Individuo], tipo: int)->list:
         global fintess_melhor_geracao
@@ -89,7 +99,7 @@ class Simulacao():
         posicao = self.mapa.posicao_disponivel(3) #pegar uma nova posição
         nova_populacao.append(CriarIndividuo(gene=melhor_da_populacao.gene, posicao=posicao, tipo=tipo, modelo=self.modelo)) #colocar o melhor da geração na prróximo geração
         tam_pop_antiga: int = len(populacao)
-        print(f"tam da população antes: {tam_pop_antiga}")
+        #print(f"tam da população antes: {tam_pop_antiga}")
         
         fit_melhor_pop: int = melhor_da_populacao.quantidade
         #---------------------Cruzar---------------------
@@ -114,18 +124,14 @@ class Simulacao():
             nova_populacao.append(CriarIndividuo(gene=gene, posicao=posicao, tipo=tipo, modelo=self.modelo)) #adicionar o novo cara na população
        
         for i in range(self.mudanca_num_pop):  #coloca novos indv para entrar no lugar dos piores retirados da populacao
-            print("nova cara para compensar")
+            #print("novo cara para compensar")
             posicao = self.mapa.posicao_disponivel(tipo)
-            nova_populacao.append(CriarIndividuo(gene=melhor_da_populacao.gene, posicao=posicao, modelo=self.modelo, tipo=tipo))
+            nova_populacao.append(CriarIndividuo(gene=ag.mutate(melhor_da_populacao.gene,self.__mutacao_atual__()), posicao=posicao, modelo=self.modelo, tipo=tipo))
        
-        for i in range(10):
+        for i in range(10): #adiciona 10 individous aleatorios
             posicao = self.mapa.posicao_disponivel(tipo)
             nova_populacao.append(CriarIndividuo(gene=None, posicao=posicao, modelo=self.modelo, tipo=tipo))
 
-       # for i in range(len(populacao) - (10), len(populacao)):
-           # posicao = self.mapa.posicao_disponivel(tipo)
-
-           # nova_populacao.append(CriarIndividuo(gene=None, posicao=posicao, modelo=self.modelo, tipo=tipo))
 
         #---------------------Grafico---------------------
         media_dos_fitness /= len(populacao) #calcula media
@@ -135,7 +141,7 @@ class Simulacao():
         fintess_melhor_geracao.append(melhor_da_populacao.quantidade)
         self.mudanca_num_pop = abs(tam_pop_antiga - len(nova_populacao) )
         print(f"mudanca na popula {self.mudanca_num_pop}")
-        print(f"tam da nova populacao {len(nova_populacao) }")
+        #print(f"tam da nova populacao {len(nova_populacao) }")
         return nova_populacao
 
     def Simulate(self):
@@ -211,14 +217,26 @@ class Simulacao():
                 self.Plotar_Grafico()
 
             contador += 1
-
-            #---------------------Simular---------------------
+            fit_melhor_antigo: int = melhor_de_todos.quantidade
+            #---------------------Simular--------------------- 
             self.Simulate()
-
+            
             #---------------------Nova Populacao---------------------
             self.mapa = Mapa(50, 50, obstaculo_chance=0, terra_chance=0.5, grama_chance=0.5) #criar um mapa novo (resetar as gramas)
 
-            self.individuos = self.nova_populacao(self.individuos, self.individuos[0].tipo)     
+            self.individuos = self.nova_populacao(self.individuos, self.individuos[0].tipo)    
+            
+            fit_novo_melhor: int = melhor_de_todos.quantidade 
+
+            mudanca_fit = abs(fit_novo_melhor - fit_melhor_antigo)
+            
+            if mudanca_fit < self.DELTA:
+                self.geracoes_fit_estag += 1
+
+            tamanho_lista: int = len(self.MUTACAO_VARIAVEL)
+            if  self.geracoes_fit_estag >= 10:
+                self.mutacao_variavel_index  =  (self.mutacao_variavel_index + 1) %   tamanho_lista
+                self.geracoes_fit_estag = 0
             
             
     def Plotar_Grafico(self):
