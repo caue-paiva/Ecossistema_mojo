@@ -131,7 +131,7 @@ class Simulacao():
             nova_populacao.append(CriarIndividuo(gene=gene, posicao=posicao, tipo=tipo, modelo=self.modelo)) #adicionar o novo cara na população
        
         for i in range(self.mudanca_num_pop):  #coloca novos indv para entrar no lugar dos piores retirados da populacao
-            #print("novo cara para compensar")
+            print("novo cara para compensar")
             posicao = self.mapa.posicao_disponivel(tipo)
             nova_populacao.append(CriarIndividuo(gene=gene_cruzar.gene, posicao=posicao, modelo=self.modelo, tipo=tipo))
        
